@@ -1,0 +1,20 @@
+{
+  "name": "bookstore",
+  "version": "1.0.0",
+  "description": "Simple bookstore application",
+  "homepage": "https://github.com/ojones28/bookstore#readme",
+  "bugs": {
+    "url": "https://github.com/ojones28/bookstore/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ojones28/bookstore.git"
+  },
+  "license": "ISC",
+  "author": "Owen Jones",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
