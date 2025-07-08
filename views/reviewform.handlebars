@@ -1,0 +1,22 @@
+<div class="review-form">
+    <h2>Leave a Review for "{{book.title}}" by {{book.author}}</h2>
+
+    {{#if error}}
+    <p class="review-error">{{error}}</p>
+    {{/if}}
+
+    <form method="POST" action="/books/{{book.book_id}}/review">
+        <label for="rating">Rating (1-5):</label>
+        <input type="number" name="rating" id="rating" min="1" max="5" required />
+
+        <br><br>
+
+        <label for="review_text">Review:</label><br>
+        <textarea name="review_text" id="review_text" rows="6" cols="60" required>{{review_text}}</textarea>
+
+        <br><br>
+        <button type="submit" class="submit-review-btn">Submit Review</button>
+    </form>
+
+    <p><a href="/books/{{book.book_id}}/reviews">← Back to Reviews</a></p>
+</div>

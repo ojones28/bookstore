@@ -1,0 +1,17 @@
+<h2>Reviews for "{{book.title}}" by {{book.author}}</h2>
+
+{{#if reviews.length}}
+  <ul>
+    {{#each reviews}}
+      <li>
+        <strong>{{reviewer}}</strong> rated it <strong>{{rating}}/5</strong><br>
+        <em>{{posted_at}}</em><br>
+        <p>{{review_text}}</p>
+      </li>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>No reviews yet.</p>
+{{/if}}
+
+<a href="/">← Back to Home</a>

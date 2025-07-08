@@ -1,0 +1,11 @@
+<header>
+  {{#if user}}
+    <span>Welcome, {{user.first_name}}!</span>
+    <form action="/logout" method="POST" style="display:inline">
+      <button type="submit">Log Out</button>
+    </form>
+  {{else}}
+    <a href="/login">Log In</a>
+    <a href="/register">Register</a>
+  {{/if}}
+</header>

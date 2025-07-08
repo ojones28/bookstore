@@ -1,0 +1,90 @@
+<main>
+    <div class="filters">
+        <input type="text" id="search" placeholder="Search by title or author..." />
+
+        <label>
+            Rating:
+            <div>
+                <span id="rating-min-val">1</span>
+                <input type="range" id="rating-min" min="1" max="5" value="1" />
+                to
+                <input type="range" id="rating-max" min="1" max="5" value="5" />
+                <span id="rating-max-val">5</span>
+            </div>
+        </label>
+
+        <label>
+            Price:
+            <div>
+                $<span id="price-min-val">0</span>
+                <input type="range" id="price-min" min="0" max="50" value="0" />
+                to
+                <input type="range" id="price-max" min="0" max="50" value="50" />
+                $<span id="price-max-val">50</span>
+            </div>
+        </label>
+
+        <label>
+            Genres:
+            <div style="display:flex; align-items:center;">
+                <select id="genres" multiple size="4" style="flex:1;">
+                    {{#each genres}}
+                    <option value="{{this.name}}">{{this.name}}</option>
+                    {{/each}}
+                </select>
+                <button type="button" id="clear-genres" style="margin-left:8px;">Clear</button>
+            </div>
+        </label>
+    </div>
+
+
+    <table id="books-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Rating</th>
+                <th>Genres</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each books}}
+            <tr data-title="{{title}}" data-author="{{author}}" data-rating="{{avg_rating}}" data-price="{{price}}"
+                data-genres="{{genres}}">
+                <td>{{title}}</td>
+                <td>{{author}}</td>
+                <td>${{price}}</td>
+                <td>{{avg_rating}}</td>
+                <td>{{#each genres}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</td>
+                <td>
+                    <a href="/books/{{book_id}}/reviews">View Reviews</a>
+                    {{#if ../user}}
+                    <button class="add-to-cart-btn" data-id="{{book_id}}" data-title="{{title}}" data-price="{{price}}">
+                        Add to Cart
+                    </button>
+
+
+                    {{#if has_ordered}}
+                    <a href="/books/{{book_id}}/review/new">Leave Review</a>
+                    {{/if}}
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    {{#if user}}
+    <div id="cart-section">
+        <h3>Your Cart</h3>
+        <ul id="cart-items"></ul>
+        <p>Total: $<span id="cart-total">0.00</span></p>
+        <button id="place-order-btn">Place Order</button>
+    </div>
+    {{/if}}
+
+    <script src="/js/homefilters.js"></script>
+    <script src="/js/cart.js"></script>
+</main>
