@@ -244,3 +244,44 @@ h2 {
 .review-form a:hover {
 	text-decoration: underline;
 }
+
+.basic-form {
+	background-color: white;
+	padding: 20px;
+	max-width: 400px;
+	margin: 30px auto;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.basic-form form {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.basic-form input {
+	padding: 10px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.basic-form button {
+	background-color: #4a90e2;
+	color: white;
+	border: none;
+	padding: 10px;
+	font-size: 15px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.basic-form button:hover {
+	background-color: #3a76c2;
+}
+
+.basic-form p {
+	margin-top: 10px;
+	font-size: 14px;
+}

@@ -329,6 +329,9 @@ app.post('/order', async (req, res) => {
 		res.json({ success: true });
 	} catch (err) {
 		console.error(err);
+		if (err.sqlState === '45000') {
+			return res.render('home', { error: err.message });
+		}
 		res.status(500).json({ success: false, error: 'Server error' });
 	}
 });

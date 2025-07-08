@@ -83,6 +83,9 @@
         <p>Total: $<span id="cart-total">0.00</span></p>
         <button id="place-order-btn">Place Order</button>
     </div>
+    {{#if error}}
+    <p style="color:red">{{error}}</p>
+    {{/if}}
     {{/if}}
 
     <script src="/js/homefilters.js"></script>

@@ -1,3 +1,12 @@
+-- price in order item at time of order
+-- composite primary key or no
+-- enum?
+-- pools
+-- users could have timestamps for created/updated
+-- not sure on indexes and how they affect performance
+-- auto set total price
+-- better communication
+
 DROP DATABASE IF EXISTS bookstore;
 CREATE DATABASE bookstore;
 
@@ -81,7 +90,7 @@ BEGIN
     WHERE order_id = NEW.order_id
   )
   WHERE order_id = NEW.order_id;
-END $$
+END$$
 
 CREATE TRIGGER bookstore.order_items_after_update
 AFTER UPDATE ON bookstore.order_items
@@ -94,7 +103,7 @@ BEGIN
     WHERE order_id = NEW.order_id
   )
   WHERE order_id = NEW.order_id;
-END $$
+END$$
 
 CREATE TRIGGER bookstore.order_items_after_delete
 AFTER DELETE ON bookstore.order_items
@@ -107,7 +116,59 @@ BEGIN
     WHERE order_id = OLD.order_id
   )
   WHERE order_id = OLD.order_id;
-END $$
+END$$
+
+CREATE TRIGGER bookstore.order_items_before_insert
+BEFORE INSERT ON bookstore.order_items
+FOR EACH ROW
+BEGIN
+  DECLARE available INT;
+  SELECT stock_quantity INTO available
+    FROM bookstore.books
+   WHERE book_id = NEW.book_id;
+  IF NEW.quantity > available THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = "Not enough stock";
+  END IF;
+END$$
+
+CREATE TRIGGER bookstore.order_items_before_update
+BEFORE UPDATE ON bookstore.order_items
+FOR EACH ROW
+BEGIN
+  DECLARE available INT;
+  SELECT stock_quantity INTO available
+    FROM bookstore.books
+   WHERE book_id = NEW.book_id;
+  IF NEW.quantity > available THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = "Not enough stock";
+  END IF;
+END$$
+
+CREATE TRIGGER bookstore.order_completed_after_update
+AFTER UPDATE ON bookstore.orders
+FOR EACH ROW
+BEGIN
+  IF NEW.status = 'completed' AND OLD.status != 'completed' THEN
+    UPDATE bookstore.books b
+    JOIN bookstore.order_items oi ON b.book_id = oi.book_id
+    SET b.stock_quantity = b.stock_quantity - oi.quantity
+    WHERE oi.order_id = NEW.order_id;
+  END IF;
+END$$
+
+CREATE TRIGGER bookstore.order_completed_after_insert
+AFTER INSERT ON bookstore.orders
+FOR EACH ROW
+BEGIN
+  IF NEW.status = 'completed' THEN
+    UPDATE bookstore.books b
+    JOIN bookstore.order_items oi ON b.book_id = oi.book_id
+    SET b.stock_quantity = b.stock_quantity - oi.quantity
+    WHERE oi.order_id = NEW.order_id;
+  END IF;
+END$$
 
 DELIMITER ;
 
@@ -187,12 +248,3 @@ INSERT INTO bookstore.order_items (order_id, book_id, quantity, price) VALUES
   (2, 2, 1,  8.99),  -- 1984 x1
   (2, 3, 1, 12.50),  -- The Da Vinci Code x1
   (2, 6, 1, 16.00);  -- Sapiens x1
-
--- price in order item at time of order
--- composite primary key or no
--- enum?
--- pools
--- users could have timestamps for created/updated
--- not sure on indexes and how they affect performance
--- auto set total price
--- better communication
